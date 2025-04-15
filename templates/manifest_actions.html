@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manifest Actions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen" onload="loadManifestAndVerifyHTS()">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
+        <h1 class="text-2xl font-bold mb-6 text-center">Manifest Actions</h1>
+        <p class="text-center mb-6">MBOL Number: {{ mbol_number }}</p>
+        <div class="flex justify-around mb-6">
+            <button onclick="deleteManifest()" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Manifest</button>
+            <button onclick="viewManifest()" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">View Manifest</button>
+            <button onclick="sendManifest()" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Send Manifest</button>
+        </div>
+        <!-- Last Event Table -->
+        <div id="lastEventTable" class="mb-6 hidden">
+            <h2 class="text-lg font-semibold mb-2">Manifest Rejection Reasons</h2>
+            <table class="w-full border-collapse border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border border-gray-300 p-2 text-left">Reason</th>
+                    </tr>
+                </thead>
+                <tbody id="lastEventBody"></tbody>
+            </table>
+        </div>
+        <!-- HTS Response Table -->
+        <div id="htsResponseTable" class="mb-6 hidden">
+            <h2 class="text-lg font-semibold mb-2">HTS Verification Details</h2>
+            <table class="w-full border-collapse border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border border-gray-300 p-2 text-left">HTS Number</th>
+                        <th class="border border-gray-300 p-2 text-left">Commodity Description</th>
+                        <th class="border border-gray-300 p-2 text-left">Item Description</th>
+                        <th class="border border-gray-300 p-2 text-left">No Warning</th>
+                        <th class="border border-gray-300 p-2 text-left">Valid HTS</th>
+                    </tr>
+                </thead>
+                <tbody id="htsResponseBody"></tbody>
+            </table>
+            <h3 class="text-lg font-semibold mt-4 mb-2">PGA Information</h3>
+            <table class="w-full border-collapse border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border border-gray-300 p-2 text-left">Flag</th>
+                        <th class="border border-gray-300 p-2 text-left">Disclaimer</th>
+                        <th class="border border-gray-300 p-2 text-left">Valid</th>
+                    </tr>
+                </thead>
+                <tbody id="pgaResponseBody"></tbody>
+            </table>
+        </div>
+        <!-- Response Display -->
+        <div id="response" class="p-4 bg-gray-50 rounded-md hidden"></div>
+    </div>
+
+    <script>
+        async function deleteManifest() {
+            const responseDiv = document.getElementById('response');
+            const lastEventTable = document.getElementById('lastEventTable');
+            const htsResponseTable = document.getElementById('htsResponseTable');
+            responseDiv.classList.remove('hidden');
+            lastEventTable.classList.add('hidden');
+            htsResponseTable.classList.add('hidden');
+            responseDiv.innerHTML = '<p class="text-blue-600">Deleting manifest...</p>';
+
+            try {
+                const response = await fetch('/delete_manifest', {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                if (result.status === 'success') {
+                    responseDiv.innerHTML = `<pre class="text-sm">${JSON.stringify(result.response, null, 2)}</pre>`;
+                } else {
+                    responseDiv.innerHTML = `<p class="text-red-600">Error: ${result.message}</p><pre class="text-sm">${JSON.stringify(result.api_error || {}, null, 2)}</pre>`;
+                }
+            } catch (error) {
+                responseDiv.innerHTML = `<p class="text-red-600">Error: ${error.message}</p>`;
+            }
+        }
+
+        async function viewManifest() {
+            const responseDiv = document.getElementById('response');
+            const lastEventTable = document.getElementById('lastEventTable');
+            const lastEventBody = document.getElementById('lastEventBody');
+            const htsResponseTable = document.getElementById('htsResponseTable');
+            responseDiv.classList.remove('hidden');
+            responseDiv.innerHTML = '<p class="text-blue-600">Fetching manifest...</p>';
+
+            try {
+                const response = await fetch('/view_manifest', {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                if (result.status === 'success') {
+                    // Populate raw JSON response
+                    responseDiv.innerHTML = `<pre class="text-sm">${JSON.stringify(result.response, null, 2)}</pre>`;
+
+                    // Populate lastEvent reasons
+                    const lastEvent = result.response.data[0]?.lastEvent || '';
+                    if (lastEvent) {
+                        lastEventTable.classList.remove('hidden');
+                        const reasons = lastEvent.split(',').map(reason => reason.trim());
+                        lastEventBody.innerHTML = reasons.map(reason => `
+                            <tr>
+                                <td class="border border-gray-300 p-2">${reason}</td>
+                            </tr>
+                        `).join('');
+                    } else {
+                        lastEventTable.classList.add('hidden');
+                    }
+                } else {
+                    responseDiv.innerHTML = `<p class="text-red-600">Error: ${result.message}</p><pre class="text-sm">${JSON.stringify(result.api_error || {}, null, 2)}</pre>`;
+                    lastEventTable.classList.add('hidden');
+                    htsResponseTable.classList.add('hidden');
+                }
+            } catch (error) {
+                responseDiv.innerHTML = `<p class="text-red-600">Error: ${error.message}</p>`;
+                lastEventTable.classList.add('hidden');
+                htsResponseTable.classList.add('hidden');
+            }
+        }
+
+        async function sendManifest() {
+            const responseDiv = document.getElementById('response');
+            const lastEventTable = document.getElementById('lastEventTable');
+            const htsResponseTable = document.getElementById('htsResponseTable');
+            responseDiv.classList.remove('hidden');
+            lastEventTable.classList.add('hidden');
+            htsResponseTable.classList.add('hidden');
+            responseDiv.innerHTML = '<p class="text-blue-600">Sending manifest...</p>';
+
+            try {
+                const response = await fetch('/send_manifest', {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                if (result.status === 'success') {
+                    responseDiv.innerHTML = `<pre class="text-sm">${JSON.stringify(result.response, null, 2)}</pre>`;
+                } else {
+                    responseDiv.innerHTML = `<p class="text-red-600">Error: ${result.message}</p><pre class="text-sm">${JSON.stringify(result.api_error || {}, null, 2)}</pre>`;
+                }
+            } catch (error) {
+                responseDiv.innerHTML = `<p class="text-red-600">Error: ${error.message}</p>`;
+            }
+        }
+
+        async function verifyHTS(htsNumber, description) {
+            if (!htsNumber) {
+                console.log('No HTS Number provided for verification');
+                return;
+            }
+
+            const htsResponseTable = document.getElementById('htsResponseTable');
+            const htsResponseBody = document.getElementById('htsResponseBody');
+            const pgaResponseBody = document.getElementById('pgaResponseBody');
+
+            try {
+                const payload = { HTSNumber: htsNumber };
+                if (description) {
+                    payload.description = description;
+                }
+
+                const response = await fetch('/review_hts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+
+                if (result.status === 'success' && result.response.data && result.response.data.length > 0) {
+                    htsResponseTable.classList.remove('hidden');
+
+                    // Populate HTS details
+                    const htsData = result.response.data[0];
+                    htsResponseBody.innerHTML = `
+                        <tr>
+                            <td class="border border-gray-300 p-2">${htsData.HTSNumber || 'N/A'}</td>
+                            <td class="border border-gray-300 p-2">${htsData.CommodityDescription || 'N/A'}</td>
+                            <td class="border border-gray-300 p-2">${htsData.itemDescription || 'N/A'}</td>
+                            <td class="border border-gray-300 p-2">${htsData.noWarning ? 'True' : 'False'}</td>
+                            <td class="border border-gray-300 p-2">${htsData.validHTS || 'N/A'}</td>
+                        </tr>
+                    `;
+
+                    // Populate PGA Information
+                    if (htsData.PGAInformation && htsData.PGAInformation.length > 0) {
+                        pgaResponseBody.innerHTML = htsData.PGAInformation.map(pga => `
+                            <tr>
+                                <td class="border border-gray-300 p-2">${pga.flag || 'N/A'}</td>
+                                <td class="border border-gray-300 p-2">${pga.diclaim || 'N/A'}</td>
+                                <td class="border border-gray-300 p-2">${pga.valid ? 'True' : 'False'}</td>
+                            </tr>
+                        `).join('');
+                    } else {
+                        pgaResponseBody.innerHTML = '<tr><td colspan="3" class="border border-gray-300 p-2 text-center">No PGA Information</td></tr>';
+                    }
+                } else {
+                    htsResponseTable.classList.add('hidden');
+                    console.log(`HTS Verification Failed: ${result.message || 'Unknown error'}`);
+                }
+            } catch (error) {
+                htsResponseTable.classList.add('hidden');
+                console.log(`Error verifying HTS Code: ${error.message}`);
+            }
+        }
+
+        async function loadManifestAndVerifyHTS() {
+            try {
+                const response = await fetch('/view_manifest', {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                if (result.status === 'success' && result.response.data && result.response.data.length > 0) {
+                    const manifestData = result.response.data[0];
+                    const htsNumber = manifestData.items && manifestData.items[0]?.HTSNumber;
+                    const description = manifestData.items && manifestData.items[0]?.description;
+                    if (htsNumber) {
+                        await verifyHTS(htsNumber, description);
+                    } else {
+                        console.log('No HTS Number found in manifest data');
+                    }
+                } else {
+                    console.log('Failed to load manifest data for HTS verification');
+                }
+            } catch (error) {
+                console.log(`Error loading manifest: ${error.message}`);
+            }
+        }
+
+        // Trigger HTS verification on page load
+        window.addEventListener('load', loadManifestAndVerifyHTS);
+    </script>
+</body>
+</html>

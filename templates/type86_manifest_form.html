@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Type 86 Simplified Clearance Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
+        <h1 class="text-2xl font-bold mb-6 text-center">Type 86 Simplified Clearance Manifest</h1>
+        <!-- Top Buttons -->
+        <div class="flex justify-between mb-6">
+            <button type="button" onclick="submitManifest()" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Submit Manifest</button>
+            <button id="proceedButtonTop" onclick="proceedToActions()" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 hidden">Proceed to Actions</button>
+        </div>
+        <!-- Response Display -->
+        <div id="response" class="mb-6 p-4 bg-gray-50 rounded-md hidden"></div>
+        <form id="manifestForm" class="space-y-6">
+            <!-- General Manifest Details -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Type</label>
+                    <input type="text" name="type" value="abi-type86" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Send As</label>
+                    <select name="sendAs" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <option value="add" selected>Add</option>
+                        <option value="update">Update</option>
+                        <option value="replace">Replace</option>
+                        <option value="cancel">Cancel</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Date of Arrival (YYYYMMDD)</label>
+                    <input type="text" name="dateOfArrival" value="20221013" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Time of Arrival (HHMM)</label>
+                    <input type="text" name="timeOfArrival" value="0010" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Entry Type</label>
+                    <input type="text" name="entryType" value="86" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Mode of Transport</label>
+                    <input type="text" name="modeOfTransport" value="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">IOR Type</label>
+                    <input type="text" name="IORType" value="EI" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">IOR Number</label>
+                    <input type="text" name="IORNumber" value="12-1234567XX" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Port of Entry</label>
+                    <input type="text" name="portOfEntry" value="1102" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Manifest Number</label>
+                    <input type="text" name="manifestNumber" value="ABC01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Filer Contact Name</label>
+                    <input type="text" name="filerContactName" value="BTS TXT" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Filer Phone Number</label>
+                    <input type="text" name="filerPhoneNumber" value="123457890" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Bond Type</label>
+                    <input type="text" name="bondType" value="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Bill Type</label>
+                    <input type="text" name="billType" value="M" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">MBOL Number</label>
+                    <input type="text" name="MBOLNumber" value="MBOLBTS0602" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">HBOL Number</label>
+                    <input type="text" name="HBOLNumber" value="HBOL12BTS6701" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Equipment Number</label>
+                    <input type="text" name="equipmentNumber" value="1234567890" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Vessel Name</label>
+                    <input type="text" name="vesselName" value="Name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Total Quantity</label>
+                    <input type="number" name="totalQuantity" value="5" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Known Importer</label>
+                    <select name="knownImporter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <option value="Y">Yes</option>
+                        <option value="N">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Perishable Goods</label>
+                    <select name="perishableGoods" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <option value="N">No</option>
+                        <option value="Y">Yes</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Seller Details -->
+            <div class="border-t pt-4">
+                <h2 class="text-lg font-semibold mb-4">Seller Details</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Seller Name</label>
+                        <input type="text" name="sellerName" value="Test Name Seller" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Seller Address 1</label>
+                        <input type="text" name="sellerAddress1" value="Test Address" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Seller City</label>
+                        <input type="text" name="sellerCity" value="BEIJING" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Seller Country</label>
+                        <input type="text" name="sellerCountry" value="CN" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Consignee Details -->
+            <div class="border-t pt-4">
+                <h2 class="text-lg font-semibold mb-4">Consignee Details</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Consignee Name</label>
+                        <input type="text" name="consigneeName" value="Test Name Consignee" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Consignee Identifier Code</label>
+                        <input type="text" name="consigneeIdentifierCode" value="EI" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Consignee Address 1</label>
+                        <input type="text" name="consigneeAddress1" value="Test Address" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Consignee City</label>
+                        <input type="text" name="consigneeCity" value="PICKERING" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Consignee Postal Code</label>
+                        <input type="text" name="consigneePostalCode" value="12345" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Consignee Tax ID</label>
+                        <input type="text" name="consigneeTaxID" value="12-123456789" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Consignee State/Province</label>
+                        <input type="text" name="consigneeStateOrProvince" value="OH" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Consignee Country</label>
+                        <input type="text" name="consigneeCountry" value="US" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shipment Details -->
+            <div class="border-t pt-4">
+                <h2 class="text-lg font-semibold mb-4">Shipment Details</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Description</label>
+                        <input type="text" name="shipmentDescription" value="TEST BTS" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">HTS Number</label>
+                        <input type="text" name="shipmentHTSNumber" value="2903992000" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Country of Origin</label>
+                        <input type="text" name="shipmentCountryOfOrigin" value="CN" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Line Item Value</label>
+                        <input type="text" name="shipmentLineItemValue" value="750" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- Bottom Buttons -->
+        <div class="flex justify-between mt-6">
+            <button type="button" onclick="submitManifest()" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Submit Manifest</button>
+            <button id="proceedButtonBottom" onclick="proceedToActions()" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 hidden">Proceed to Actions</button>
+        </div>
+    </div>
+
+    <script>
+        async function submitManifest() {
+            const form = document.getElementById('manifestForm');
+            const formData = new FormData(form);
+            const responseDiv = document.getElementById('response');
+            const proceedButtons = [document.getElementById('proceedButtonTop'), document.getElementById('proceedButtonBottom')];
+            responseDiv.classList.remove('hidden');
+            responseDiv.innerHTML = '<p class="text-blue-600">Submitting manifest...</p>';
+
+            try {
+                const response = await fetch('/submit_manifest', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.status === 'success') {
+                    responseDiv.innerHTML = `<h3 class="text-lg font-semibold">Documents API Response</h3><pre class="text-sm">${JSON.stringify(result.documents_response, null, 2)}</pre>`;
+                    proceedButtons.forEach(btn => btn.classList.remove('hidden'));
+                } else {
+                    responseDiv.innerHTML = `<p class="text-red-600">Documents API Error: ${result.message}</p><pre class="text-sm">${JSON.stringify(result.api_error || {}, null, 2)}</pre>`;
+                    proceedButtons.forEach(btn => btn.classList.add('hidden'));
+                }
+            } catch (error) {
+                responseDiv.innerHTML = `<p class="text-red-600">Client Error: ${error.message}</p>`;
+                proceedButtons.forEach(btn => btn.classList.add('hidden'));
+            }
+        }
+
+        async function proceedToActions() {
+            const responseDiv = document.getElementById('response');
+            responseDiv.innerHTML = '<p class="text-blue-600">Redirecting...</p>';
+
+            try {
+                const response = await fetch('/proceed_to_actions', {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                if (result.status === 'redirect') {
+                    window.location.href = result.redirect_url;
+                } else {
+                    responseDiv.innerHTML = `<p class="text-red-600">Error: Failed to redirect.</p>`;
+                }
+            } catch (error) {
+                responseDiv.innerHTML = `<p class="text-red-600">Client Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
